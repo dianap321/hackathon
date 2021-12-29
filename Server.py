@@ -19,7 +19,7 @@ class Server:
         self.player_answer = '10'
 
         # Set UDP socket
-        self.UDP_server_socket = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP)
+        self.UDP_server_socket = socket(AF_INET, SOCK_DGRAM)
         self.UDP_server_socket.bind(("172.99.255.255", 0))  # TODO: do we need to pass a port num?
         #self.UDP_server_socket.bind(('', 15000))  # TODO: do we need to pass a port num?
         self.UDP_server_socket.setsockopt(SOL_SOCKET, SO_BROADCAST, 1)
