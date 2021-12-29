@@ -20,7 +20,7 @@ class Server:
 
         # Set UDP socket
         self.UDP_server_socket = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP)
-        self.UDP_server_socket.bind(("eth2", 0))  # TODO: do we need to pass a port num?
+        self.UDP_server_socket.bind(("172.99.255.255", 0))  # TODO: do we need to pass a port num?
         #self.UDP_server_socket.bind(('', 15000))  # TODO: do we need to pass a port num?
         self.UDP_server_socket.setsockopt(SOL_SOCKET, SO_BROADCAST, 1)
 
@@ -38,7 +38,7 @@ class Server:
             #print("in while")
             BROADCAST_PORT = 13117
             packet_format = struct.pack('Ibh', MAGIC_COOKIE, MESSAGE_TYPE, self.server_port) # TODO: last parameter?
-            self.UDP_server_socket.sendto(packet_format, ('<broadcast>', BROADCAST_PORT))
+            self.UDP_server_socket.sendto(packet_format, ('172.99.255.255', BROADCAST_PORT))
             time.sleep(1)
 
     def connect_2_TCP(self):
