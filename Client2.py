@@ -71,7 +71,7 @@ class Client2:
         except:
             print("except")
 
-
+#note
 client = Client2()
 while True:
     client.looking_for_server()
