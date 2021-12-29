@@ -14,7 +14,8 @@ class Client:
         self.team_name = "HaYetsiratiyot"
         self.UDP_client_socket = socket(AF_INET, SOCK_DGRAM)
         self.UDP_client_socket.setsockopt(SOL_SOCKET, SO_REUSEADDR, 1)
-        self.UDP_client_socket.bind(('172.99.255.255', UDP_PORT))
+        #self.UDP_client_socket.bind(('172.99.255.255', UDP_PORT))
+        self.UDP_client_socket.bind(('', UDP_PORT))
         self.server_port_num = 0
         self.server_IP_address = ""
 
@@ -25,7 +26,7 @@ class Client:
         while True: # TODO
             try:
                 offer, address = self.UDP_client_socket.recvfrom(BUFFER_SIZE)
-                cookie, type, self.server_port_num = struct.unpack('Ibh', offer)
+                cookie, type, self.server_port_num = struct.unpack('IbH', offer)
             except:
                 continue
             if cookie != MAGIC_COOKIE or type != MESSAGE_TYPE:
