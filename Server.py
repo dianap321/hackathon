@@ -20,7 +20,7 @@ class Server:
 
         # Set UDP socket
         self.UDP_server_socket = socket(AF_INET, SOCK_DGRAM)
-        self.UDP_server_socket.bind((self.IP_address, 12345))  # TODO: do we need to pass a port num?
+        self.UDP_server_socket.bind(('172.99.255.255', 12345))  # TODO: do we need to pass a port num?
         self.UDP_server_socket.setsockopt(SOL_SOCKET, SO_BROADCAST, 1)
 
         # Set TCP socket
