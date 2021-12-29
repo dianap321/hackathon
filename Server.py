@@ -37,7 +37,7 @@ class Server:
            # self.send_UDP_offer()
             #print("in while")
             BROADCAST_PORT = 13117
-            packet_format = struct.pack('Ibh', MAGIC_COOKIE, MESSAGE_TYPE, self.server_port) # TODO: last parameter?
+            packet_format = struct.pack('IbH', MAGIC_COOKIE, MESSAGE_TYPE, self.server_port) # TODO: last parameter?
             self.UDP_server_socket.sendto(packet_format, ('172.99.255.255', BROADCAST_PORT))
             time.sleep(1)
 
