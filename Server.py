@@ -1,6 +1,5 @@
 import struct
 import time
-from msvcrt import getch
 from random import *
 from threading import *
 from socket import *

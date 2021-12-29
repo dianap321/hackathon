@@ -1,7 +1,5 @@
-import msvcrt
 import sys
 import threading
-from msvcrt import getch
 from socket import *
 import struct
 UDP_PORT = 13117
