@@ -75,24 +75,25 @@ class Server:
         try:
             reciever_socket.send(msg)
             c = reciever_socket.recv(1024).decode()
+            print(c)
+            self.sem.acquire()
+            print("111")
+            if self.player_answer == '10':
+                print("222")
+                self.player_answer = c
+                print("333")
+                self.answering_player = self.connections[client_identifier][0]
+                print("444")
+            self.sem.release()
+            print("i finished")
         except:
             print("except")
-        print(c)
-        self.sem.acquire()
-        print("111")
-        if self.player_answer == '10':
-            print("222")
-            self.player_answer = c
-            print("333")
-            self.answering_player = self.connections[client_identifier][0]
-            print("444")
-        self.sem.release()
-        print("i finished")
+
 
     def check_answer(self, correct_answer):
         result = "Game over!\nThe correct answer was " + correct_answer + "!\n\n"
         if self.player_answer == '10': # draw
-            result = "It's a draw!"
+            result += "It's a draw!"
         elif self.player_answer == correct_answer:
             result += "Congratulations to the winner: " + self.answering_player
         else:

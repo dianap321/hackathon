@@ -1,3 +1,6 @@
+import msvcrt
+import sys
+import threading
 from msvcrt import getch
 from socket import *
 import struct
@@ -45,14 +48,21 @@ class Client:
 
         print("name sent")
 
+    def get_input(self):
+        c = sys.stdin.readline()[0]
+        #c = '3'  # TODO: change
+        print(c)
+        self.TCP_client_socket.send(c.encode())
+
     def game_mode(self):
         try:
             wlcm_msg = self.TCP_client_socket.recv(BUFFER_SIZE)
             print(wlcm_msg.decode())
+            #c= msvcrt.getwch()
             #c = getch().decode('ASCII')
-            c = '3'  # TODO: change
-            print(c)
-            self.TCP_client_socket.send(c.encode())
+            t1 = threading.Thread(target=self.get_input)
+            t1.start()
+            #t1.join(10)
             win_msg = self.TCP_client_socket.recv(BUFFER_SIZE)
             print(win_msg.decode())
             self.TCP_client_socket.close()
