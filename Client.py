@@ -70,7 +70,7 @@ class Client:
         except:
             print("except")
 
-#note
+#note1
 client = Client()
 while True:
     client.looking_for_server()

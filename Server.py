@@ -146,7 +146,7 @@ class Server:
         self.player_answer = '10'
         print("Game over, sending out offer requests...")
 
-#note
+#note1
 server = Server()
 while True:
     server.waiting_for_clients()
