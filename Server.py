@@ -31,62 +31,66 @@ class Server:
 
 
     def send_UDP_offer(self):
-        print("in UDP")
+        #print("in UDP")
         while len(self.connections) < 2:
            # self.send_UDP_offer()
-            print("in while")
+            #print("in while")
             BROADCAST_PORT = 13117
             packet_format = struct.pack('Ibh', MAGIC_COOKIE, MESSAGE_TYPE, self.server_port) # TODO: last parameter?
             self.UDP_server_socket.sendto(packet_format, ('<broadcast>', BROADCAST_PORT))
             time.sleep(1)
 
     def connect_2_TCP(self):
-        print("in TCP connect")
+        #print("in TCP connect")
         while len(self.connections) < 2:
             try:
-                print("in try")
+                #print("in try")
                 clientSocket, address = self.TCP_server_socket.accept()
                 team_name = clientSocket.recv(2048).decode()[:-1]
                 self.connections.append([team_name, clientSocket, address])
-                print("after")
+                #print("after")
             except:
-                print("in except")
-                print("") # TODO
-            print(team_name)
+                #print("in except")
+                #print("") # TODO
+                continue
+            # print(team_name)
 
     def waiting_for_clients(self):
-        print("in waiting")
+        #print("in waiting")
         try:
             self.TCP_server_socket.listen(15)
         except:
-            print("")
+            return False
+            #print("")
         thread1 = Thread(target=self.send_UDP_offer)
         thread2 = Thread(target=self.connect_2_TCP)
-        print("after thread")
+        #print("after thread")
         print("Server started, listening on IP address " + self.IP_address)
         thread1.start()
         thread2.start()
         thread1.join()
         thread2.join()
+        return True
 
     def communication_with_clients(self, client_identifier, msg):
         reciever_socket = self.connections[client_identifier][1]
         try:
             reciever_socket.send(msg)
             c = reciever_socket.recv(1024).decode()
-            print(c)
+            #print(c)
             self.sem.acquire()
-            print("111")
+            # print("111")
             if self.player_answer == '10':
-                print("222")
+                # print("222")
                 self.player_answer = c
-                print("333")
+                # print("333")
                 self.answering_player = self.connections[client_identifier][0]
-                print("444")
+                # print("444")
             self.sem.release()
-            print("i finished")
+            # print("i finished")
         except:
-            print("except")
+            return
+            # print("except")
 
 
     def check_answer(self, correct_answer):
@@ -105,8 +109,8 @@ class Server:
             for player in self.connections:
                 player[1].send(res_to_send)
         except:
-            print("except")
-        print("end of check")
+            print("Couldn't finish executing the game, trying to connect again...")
+        # print("end of check")
 
     def random_math_question(self):
         answer = randrange(0, 9)
@@ -125,21 +129,20 @@ class Server:
         time.sleep(3)  # TODO: change to 10
         question, answer = self.random_math_question()
         msg = "Welcome to Quick Maths.\nPlayer 1: " + self.connections[0][0] + "\nPlayer 2: " + self.connections[1][0] + "\n==\nPlease answer the following question as fast as you can:\nHow much is " + question + "?\n"
-        # TODO: randomly generated math problem, delete 2+2
-
         msg_to_send = bytes(msg, 'utf-8')
         t_c1 = Thread(target=self.communication_with_clients, args=(0, msg_to_send,))
         t_c2 = Thread(target=self.communication_with_clients, args=(1, msg_to_send,))
         t_c1.start()
         t_c2.start()
-        t_c1.join(10)
-        t_c2.join(10)
+        t_c1.join(5)
+        t_c2.join(5)
         self.check_answer(answer)  #TODO: change to random answer
         for player in self.connections:
             try:
                 player[1].close()
             except:
-                print("except")
+                pass
+                #print("except")
         self.connections.clear()
         self.answering_player = ""
         self.player_answer = '10'
@@ -148,5 +151,6 @@ class Server:
 #note1
 server = Server()
 while True:
-    server.waiting_for_clients()
-    server.game_mode()
+    is_ready = server.waiting_for_clients()
+    if is_ready:
+        server.game_mode()

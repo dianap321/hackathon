@@ -1,7 +1,5 @@
-import msvcrt
 import sys
 import threading
-from msvcrt import getch
 from socket import *
 import struct
 
@@ -42,18 +40,21 @@ class Client2:
             self.TCP_client_socket.connect((self.server_IP_address, self.server_port_num))
             name_message = self.team_name + '\n'
             self.TCP_client_socket.send(name_message.encode())
-            print("connected")
+            # print("connected")
         except:
-            print("except")  # TODO
-            return
-
-        print("name sent")
+            # print("except") # TODO
+            return False
+        return True
+        # print("name sent")
 
     def get_input(self):
-        c = sys.stdin.readline()[0]
-        # c = '3'  # TODO: change
-        print(c)
-        self.TCP_client_socket.send(c.encode())
+        try:
+            c = sys.stdin.readline()[0]
+            # c = '3'  # TODO: change
+            # print(c)
+            self.TCP_client_socket.send(c.encode())
+        except:
+            return  # TODO
 
     def game_mode(self):
         try:
@@ -69,14 +70,17 @@ class Client2:
             self.TCP_client_socket.close()
             print("Server disconnected, listening to offer requests...")
         except:
-            print("except")
+            # print("except")
+            print("Couldn't finish executing the game, try to connect again...")
+            return
 
-#note
+
 client = Client2()
 while True:
     client.looking_for_server()
-    client.connecting_to_a_server()
-    client.game_mode()
+    is_connected = client.connecting_to_a_server()
+    if is_connected:
+        client.game_mode()
 
 
 
