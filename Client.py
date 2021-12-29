@@ -10,11 +10,10 @@ MESSAGE_TYPE = 0x2  # for offer
 #TODO: close sockets, threads
 
 class Client:
-    def __init__(self):
+    def _init_(self):
         self.team_name = "HaYetsiratiyot"
         self.UDP_client_socket = socket(AF_INET, SOCK_DGRAM)
         self.UDP_client_socket.setsockopt(SOL_SOCKET, SO_REUSEADDR, 1)
-        #self.UDP_client_socket.bind(('172.99.255.255', UDP_PORT))
         self.UDP_client_socket.bind(('', UDP_PORT))
         self.server_port_num = 0
         self.server_IP_address = ""
@@ -26,7 +25,7 @@ class Client:
         while True: # TODO
             try:
                 offer, address = self.UDP_client_socket.recvfrom(BUFFER_SIZE)
-                cookie, type, self.server_port_num = struct.unpack('IbH', offer)
+                cookie, type, self.server_port_num = struct.unpack('Ibh', offer)
             except:
                 continue
             if cookie != MAGIC_COOKIE or type != MESSAGE_TYPE:
@@ -82,6 +81,3 @@ while True:
     is_connected = client.connecting_to_a_server()
     if is_connected:
         client.game_mode()
-
-
-

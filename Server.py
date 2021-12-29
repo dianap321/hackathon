@@ -10,7 +10,7 @@ UDP_PORT = 13117
 
 
 class Server:
-    def __init__(self):
+    def _init_(self):
         self.server_port = 2041
         self.IP_address = gethostbyname(host_name)  # TODO: change how we get the host
         self.connections = []
@@ -20,8 +20,7 @@ class Server:
 
         # Set UDP socket
         self.UDP_server_socket = socket(AF_INET, SOCK_DGRAM)
-        #self.UDP_server_socket.bind(("172.99.255.255", 0))  # TODO: do we need to pass a port num?
-        self.UDP_server_socket.bind(('', 15000))  # TODO: do we need to pass a port num?
+        self.UDP_server_socket.bind((self.IP_address, 12345))  # TODO: do we need to pass a port num?
         self.UDP_server_socket.setsockopt(SOL_SOCKET, SO_BROADCAST, 1)
 
         # Set TCP socket
@@ -37,7 +36,7 @@ class Server:
            # self.send_UDP_offer()
             #print("in while")
             BROADCAST_PORT = 13117
-            packet_format = struct.pack('IbH', MAGIC_COOKIE, MESSAGE_TYPE, self.server_port) # TODO: last parameter?
+            packet_format = struct.pack('Ibh', MAGIC_COOKIE, MESSAGE_TYPE, self.server_port) # TODO: last parameter?
             self.UDP_server_socket.sendto(packet_format, ('<broadcast>', BROADCAST_PORT))
             time.sleep(1)
 
